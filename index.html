@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>牛国英津大学 · 录取通知书</title>
+<style>
+:root { --bg: #4a0707; --gold: #c9a84c; --gold-light: #f0d68a; --red: #5a0a0a; --dark-red: #7a1010; }
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei","KaiTi","STKaiti","楷体",serif;
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex; justify-content: center; align-items: center;
+  padding: 12px;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  user-select: none; -webkit-user-select: none;
+}
+
+.container { width: 100%; max-width: 420px; position: relative; }
+
+/* ================================================================
+   封 面
+   ================================================================ */
+.cover {
+  background: linear-gradient(180deg, #6e1111 0%, #4a0707 40%, #5f0e0e 100%);
+  border: 4px solid var(--gold);
+  border-radius: 10px;
+  padding: 24px 16px;
+  text-align: center;
+  min-height: 440px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: opacity 0.4s, transform 0.4s;
+  position: relative; z-index: 2;
+}
+.cover:active { transform: scale(0.97); }
+
+.cover-frame {
+  border: 2px solid #d4a843;
+  padding: 30px 14px 24px; width: 100%;
+}
+
+.cover-deco { color:#d4a843; font-size:13px; letter-spacing:6px; margin-bottom:10px; }
+
+.cover-school {
+  font-size: 26px; font-weight: bold; color: var(--gold-light);
+  letter-spacing: 6px; margin-bottom: 2px;
+}
+.cover-eng {
+  font-size: 10px; color: var(--gold); letter-spacing: 4px; margin-bottom: 22px;
+}
+
+/* 火漆印章 */
+.wax-seal {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 78px; height: 78px; border: 3px solid var(--gold);
+  border-radius: 50%; background: rgba(160,20,20,0.55);
+  color: var(--gold-light); margin-bottom: 18px;
+}
+.wax-seal .star { font-size: 26px; line-height:1; }
+.wax-seal .txt { font-size: 11px; font-weight: bold; line-height:1.3; }
+
+.cover-title {
+  font-size: 22px; font-weight: bold; color: var(--gold-light);
+  letter-spacing: 8px; margin-bottom: 22px;
+}
+
+.cover-hint span {
+  display: inline-block; font-size: 14px; color: var(--gold);
+  letter-spacing: 4px; border: 2px solid var(--gold);
+  border-radius: 24px; padding: 10px 36px;
+  animation: pulse 1.8s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 0.55; } 50% { opacity: 1; }
+}
+
+/* ================================================================
+   内页（录取通知书）
+   ================================================================ */
+.letter-wrap {
+  display: none;
+  animation: fadeIn 0.45s ease;
+}
+.letter-wrap.show { display: block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+/* 金色外框 */
+.outer { background:var(--gold); padding:5px; border-radius:6px; box-shadow:0 8px 36px rgba(0,0,0,0.5); }
+.mid   { background:#b8943a; padding:4px; border-radius:4px; }
+
+/* 纸面 */
+.paper { background:#fffef5; padding:12px; }
+.paper-border {
+  border: 2px solid #9a1a1a; padding: 24px 18px 16px;
+}
+
+/* 内容 */
+.top-deco { text-align:center; color:#a01a1a; font-size:12px; letter-spacing:6px; margin-bottom:4px; }
+.school-name { text-align:center; font-size:22px; font-weight:bold; color:var(--dark-red); letter-spacing:4px; }
+
+/* 分隔线 */
+.divider { display:flex; align-items:center; margin:8px 0 12px; }
+.divider .dl { flex:1; height:1px; background:#b04040; }
+.divider .ds { margin:0 16px; color:#b04040; font-size:14px; }
+
+.main-title { text-align:center; font-size:22px; font-weight:bold; color:var(--dark-red); letter-spacing:12px; margin-bottom:12px; padding-left:12px; }
+.letter-no  { text-align:right; font-size:12px; color:#999; margin-bottom:12px; }
+
+.greet { font-size:15px; color:#2c1810; margin-bottom:4px; }
+.greet b { font-size:17px; color:#8b1a1a; }
+.body-p { font-size:14px; line-height:1.9; color:#2c1810; text-indent:2em; margin-bottom:2px; }
+.body-p b { color:#8b1a1a; }
+
+/* 信息框 */
+.info-box { border:2px solid #a01a1a; background:#fffaf5; margin:14px 0; }
+.info-row { display:flex; justify-content:space-between; padding:8px 14px; border-bottom:1px dashed #ddd; }
+.info-row:last-child { border-bottom:none; }
+.info-l { font-size:13px; color:#888; } .info-v { font-size:13px; font-weight:bold; color:#2c1810; }
+
+/* 落款 */
+.sig { position:relative; text-align:right; margin-top:18px; padding-right:6px; }
+.sig .sl { font-size:14px; color:#2c1810; letter-spacing:2px; margin-bottom:2px; padding-right:90px; }
+.sig .sd { font-size:13px; color:#2c1810; letter-spacing:2px; padding-right:90px; }
+
+/* 公章 */
+.seal {
+  position:absolute; right:4px; bottom:4px; width:74px; height:74px;
+  border:3px solid #c62828; border-radius:50%; background:#fff5f5;
+  color:#c62828; font-weight:bold; text-align:center;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+}
+.seal .st { font-size:9px; letter-spacing:1px; line-height:1.2; }
+.seal .ss { font-size:18px; line-height:1; }
+.seal .sb { font-size:7px; letter-spacing:1px; line-height:1.2; }
+
+.footer-note { text-align:center; font-size:11px; color:#bbb; margin-top:10px; }
+
+/* 合上按钮 */
+.back-btn { text-align:center; margin-top:16px; display:none; }
+.back-btn.show { display:block; }
+.back-btn span {
+  display:inline-block; background:var(--gold); color:#3a0505;
+  padding:12px 32px; border-radius:20px; font-size:14px; font-weight:bold;
+  letter-spacing:2px; cursor:pointer; border:2px solid #a08030;
+}
+.back-btn span:active { background:#b8943a; }
+
+/* 分享提示 */
+.share-tip { text-align:center; color:#a08060; font-size:11px; margin-top:10px; display:none; }
+.share-tip.show { display:block; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ==================== 封面 ==================== -->
+  <div class="cover" id="cover" onclick="openIt()">
+    <div class="cover-frame">
+      <div class="cover-deco">◆  ◇  ◆</div>
+      <div class="cover-school">牛国英津大学</div>
+      <div class="cover-eng">NIU GUO YING JIN DA XUE</div>
+
+      <div class="wax-seal">
+        <span class="star">★</span>
+        <span class="txt">录 取</span>
+        <span class="txt">通知书</span>
+      </div>
+
+      <div class="cover-title">录 取 通 知 书</div>
+      <div class="cover-hint"><span>点 击 打 开</span></div>
+    </div>
+  </div>
+
+  <!-- ==================== 内页 ==================== -->
+  <div class="letter-wrap" id="letter">
+    <div class="outer"><div class="mid"><div class="paper"><div class="paper-border">
+
+      <div class="top-deco">◆  ◇  ◆</div>
+      <div class="school-name">牛国英津大学</div>
+
+      <div class="divider">
+        <span class="dl"></span><span class="ds">★</span><span class="dl"></span>
+      </div>
+
+      <div class="main-title">录 取 通 知 书</div>
+      <div class="letter-no">牛英招〔2026〕第 00188 号</div>
+
+      <div class="greet"><b>韩兴国</b> 同学：</div>
+
+      <div class="body-p">
+        经<b>牛国英津大学招生委员会</b>全面审核与严格选拔，兹批准你入读我校<b>全日制本科</b>。对你所展现的学术潜力与综合素养深表认可，特此致贺！
+      </div>
+
+      <div class="info-box">
+        <div class="info-row"><span class="info-l">录取院系</span><span class="info-v">人工智能与计算机科学学院</span></div>
+        <div class="info-row"><span class="info-l">录取专业</span><span class="info-v">计算机科学与技术（英才班）</span></div>
+        <div class="info-row"><span class="info-l">培养层次</span><span class="info-v">四年制本科</span></div>
+        <div class="info-row"><span class="info-l">报到时间</span><span class="info-v">2026年9月1日 — 9月3日</span></div>
+        <div class="info-row"><span class="info-l">报到地点</span><span class="info-v">牛国英津大学英津校区</span></div>
+        <div class="info-row"><span class="info-l">考生号</span><span class="info-v">24370101150888</span></div>
+      </div>
+
+      <div class="body-p">
+        望你持此通知书按时来校报到，开启崭新的求学之路。愿你秉承<b>「明德格物，立己达人」</b>之校训，追求卓越，成就未来！
+      </div>
+
+      <div class="sig">
+        <div class="seal">
+          <span class="st">牛国英津大学</span>
+          <span class="ss">★</span>
+          <span class="sb">招生办公室</span>
+        </div>
+        <div class="sl">牛国英津大学 招生办公室</div>
+        <div class="sd">二〇二六年七月十一日</div>
+      </div>
+
+      <div class="footer-note">本通知书加盖公章方为有效 · 请妥善保管</div>
+
+    </div></div></div></div></div>
+
+    <div class="back-btn" id="backBtn"><span onclick="closeIt()">合上信封</span></div>
+    <div class="share-tip" id="shareTip">长按上方通知书可保存图片</div>
+  </div>
+
+</div>
+
+<script>
+function openIt() {
+  document.getElementById('cover').style.opacity = '0';
+  document.getElementById('cover').style.pointerEvents = 'none';
+  document.getElementById('letter').classList.add('show');
+  document.getElementById('backBtn').classList.add('show');
+  document.getElementById('shareTip').classList.add('show');
+}
+
+function closeIt() {
+  document.getElementById('cover').style.opacity = '1';
+  document.getElementById('cover').style.pointerEvents = 'auto';
+  document.getElementById('letter').classList.remove('show');
+  document.getElementById('backBtn').classList.remove('show');
+  document.getElementById('shareTip').classList.remove('show');
+}
+</script>
+
+</body>
+</html>
