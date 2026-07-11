@@ -47,12 +47,6 @@ body {
   position: relative; z-index: 1;
 }
 
-/* 封面水印 */
-.cover-wm {
-  position: absolute; top:0; left:0; width:100%; height:100%;
-  pointer-events: none; z-index:0;
-}
-
 .cover-deco { color:#d4a843; font-size:13px; letter-spacing:6px; margin-bottom:10px; }
 
 .cover-school {
@@ -179,7 +173,6 @@ body {
 
   <!-- ==================== 封面 ==================== -->
   <div class="cover" id="cover" onclick="openIt()">
-    <div class="cover-wm" id="coverWm"></div>
     <div class="cover-frame">
       <div class="cover-deco">◆  ◇  ◆</div>
       <div class="cover-school">牛国英津大学</div>
@@ -199,7 +192,6 @@ body {
   <!-- ==================== 内页 ==================== -->
   <div class="letter-wrap" id="letter">
     <div class="outer"><div class="mid"><div class="paper">
-      <div class="paper-wm" id="paperWm"></div>
       <div class="paper-border">
 
       <div class="top-deco">◆  ◇  ◆</div>
@@ -252,46 +244,52 @@ body {
 </div>
 
 <script>
-// ========== 生成防伪水印 ==========
-function makeWatermark(containerId, color, fontSize, spacing, angle) {
-  var box = document.getElementById(containerId);
-  if (!box) return;
-  var w = box.offsetWidth  || 400;
-  var h = box.offsetHeight || 500;
-  var text = '鼠片制作';
-  // 计算需要多少行多少列
-  var stepX = spacing;
-  var stepY = spacing * 1.4;
-  var cols = Math.ceil((w + h) / stepX) + 4;
-  var rows = Math.ceil((h + w) / stepY) + 4;
-  var startX = -h;
-  var startY = -w * 0.3;
-  for (var row = 0; row < rows; row++) {
-    for (var col = 0; col < cols; col++) {
-      var span = document.createElement('span');
-      span.textContent = text;
-      span.style.cssText =
-        'position:absolute;' +
-        'left:' + (startX + col * stepX) + 'px;' +
-        'top:'  + (startY + row * stepY) + 'px;' +
-        'font-size:' + fontSize + 'px;' +
-        'color:' + color + ';' +
-        'font-weight:bold;' +
-        'letter-spacing:4px;' +
-        'white-space:nowrap;' +
-        'transform:rotate(' + angle + 'deg);' +
-        'pointer-events:none;';
-      box.appendChild(span);
+// ========== 用 Canvas 生成防伪水印底纹 ==========
+function createWatermarkDataUrl(text, fontSize, color, angle, tileSize) {
+  var c = document.createElement('canvas');
+  c.width  = tileSize;
+  c.height = tileSize;
+  var ctx = c.getContext('2d');
+
+  // 写多行文字，确保铺满整个 tile
+  ctx.font = 'bold ' + fontSize + 'px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  // 先旋转
+  ctx.save();
+  ctx.translate(tileSize/2, tileSize/2);
+  ctx.rotate(angle * Math.PI / 180);
+
+  // 画多行文字
+  var spacing = fontSize * 3.5;
+  var lines = Math.ceil(tileSize / spacing) + 2;
+  for (var i = -lines; i < lines; i++) {
+    var y = i * spacing;
+    // 每行偏移半格，交错排列
+    var offset = (Math.abs(i) % 2 === 0) ? 0 : tileSize * 0.28;
+    for (var j = -2; j < 4; j++) {
+      var x = j * tileSize * 0.55 + offset;
+      ctx.fillText(text, x - tileSize/2, y);
     }
   }
+  ctx.restore();
+
+  return c.toDataURL('image/png');
 }
 
-// 页面加载后生成水印
+// 页面加载后注入水印背景
 window.onload = function() {
   // 封面水印：金色半透明，深红背景上可见
-  makeWatermark('coverWm',  'rgba(240,214,138,0.10)', 14, 72, -28);
+  var coverWm = createWatermarkDataUrl('鼠片制作', 13, 'rgba(240,214,138,0.10)', -28, 200);
+  document.getElementById('cover').style.backgroundImage =
+    'url(' + coverWm + '), linear-gradient(180deg, #6e1111 0%, #4a0707 40%, #5f0e0e 100%)';
+
   // 内页水印：红色半透明，米色纸面上可见
-  makeWatermark('paperWm', 'rgba(180,30,30,0.08)',     16, 80, -28);
+  var paperWm = createWatermarkDataUrl('鼠片制作', 15, 'rgba(180,30,30,0.08)', -28, 220);
+  document.querySelector('.paper').style.backgroundImage = 'url(' + paperWm + ')';
+  document.querySelector('.paper').style.backgroundRepeat = 'repeat';
 };
 
 // ========== 翻页逻辑 ==========
@@ -301,10 +299,6 @@ function openIt() {
   document.getElementById('letter').classList.add('show');
   document.getElementById('backBtn').classList.add('show');
   document.getElementById('shareTip').classList.add('show');
-  // 如果内页水印还没生成，现在生成
-  if (!document.getElementById('paperWm').hasChildNodes()) {
-    makeWatermark('paperWm', 'rgba(180,30,30,0.08)', 16, 80, -28);
-  }
 }
 
 function closeIt() {
